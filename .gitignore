@@ -55,6 +55,12 @@ coverage.xml
 .pytest_cache/
 mlruns/
 
+
+# Images test
+tests/images
+
+
+
 # Translations
 *.mo
 *.pot

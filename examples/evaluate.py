@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import argparse
+
 from ultralytics import YOLO
 
 """
@@ -15,7 +18,7 @@ def run_map(model_path: str, data: str, imgsz: int, device: str, conf: float, cl
         print(f"mAP50-95: {metrics.box.map:.4f}")
         print(f"mAP50: {metrics.box.map50:.4f}")
         print(f"mAP75: {metrics.box.map75:.4f}")
-        if hasattr(metrics.box, 'maps') and metrics.box.maps is not None:
+        if hasattr(metrics.box, "maps") and metrics.box.maps is not None:
             print(f"Per-class mAP50-95 (first 10): {metrics.box.maps[:10]}")
             # Optional: subset mAP for selected class IDs
             if classes:
@@ -28,14 +31,22 @@ def run_map(model_path: str, data: str, imgsz: int, device: str, conf: float, cl
         print(metrics)
 
 
-def run_perf(model_path: str, source: str, device: str, conf: float, runs: int = 50, warmup: int = 10, classes: list[int] | None = None):
+def run_perf(
+    model_path: str,
+    source: str,
+    device: str,
+    conf: float,
+    runs: int = 50,
+    warmup: int = 10,
+    classes: list[int] | None = None,
+):
     import time
     from pathlib import Path
 
     model = YOLO(model_path)
     p = Path(source)
     if p.is_dir():
-        paths = sorted([str(f) for f in p.glob('*.jpg')])
+        paths = sorted([str(f) for f in p.glob("*.jpg")])
     else:
         paths = [str(p)]
 
@@ -51,7 +62,7 @@ def run_perf(model_path: str, source: str, device: str, conf: float, runs: int =
     if times:
         print("=== Performance Metrics ===")
         print(f"Samples: {len(times)}")
-        print(f"Avg latency (ms): {sum(times)/len(times):.2f}")
+        print(f"Avg latency (ms): {sum(times) / len(times):.2f}")
         print(f"Min latency (ms): {min(times):.2f}")
         print(f"Max latency (ms): {max(times):.2f}")
     else:
@@ -76,7 +87,7 @@ if __name__ == "__main__":
     args = parse_args()
     classes = None
     if args.classes:
-        classes = [int(x) for x in str(args.classes).split(',') if x.strip().isdigit()]
+        classes = [int(x) for x in str(args.classes).split(",") if x.strip().isdigit()]
     try:
         run_map(args.model, args.data, args.imgsz, args.device, args.conf, classes)
     except Exception as e:

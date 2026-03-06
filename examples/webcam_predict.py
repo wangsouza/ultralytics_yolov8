@@ -1,5 +1,9 @@
+from __future__ import annotations
+
 import argparse
+
 import cv2
+
 from ultralytics import YOLO
 
 # COCO class IDs of interest:
@@ -7,8 +11,14 @@ from ultralytics import YOLO
 TARGET_CLASS_IDS = [0, 63, 67, 47, 73]
 
 
-def run(model_path: str = "yolov8m.pt", conf: float = 0.7, device: str = "cpu", cam_index: int = 0,
-        width: int | None = None, height: int | None = None):
+def run(
+    model_path: str = "yolov8m.pt",
+    conf: float = 0.7,
+    device: str = "cpu",
+    cam_index: int = 0,
+    width: int | None = None,
+    height: int | None = None,
+):
     model = YOLO(model_path)
     cap = cv2.VideoCapture(cam_index)
     if not cap.isOpened():
@@ -44,7 +54,7 @@ def run(model_path: str = "yolov8m.pt", conf: float = 0.7, device: str = "cpu", 
             cv2.putText(frame, label, (x1, max(0, y1 - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
 
         cv2.imshow("YOLOv8 - Webcam", frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
     cap.release()
